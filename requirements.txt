@@ -1,6 +1,1 @@
-jcjb,cxw,
-
-,njkxcbjbk
-
-
-n,,nbn,
+# Ce projet utilise uniquement la librairie standard Python.
