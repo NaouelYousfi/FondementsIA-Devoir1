@@ -1,18 +1,24 @@
 #-----------------------------------------BFS----------------------------
 
-
+# bfs.py
 from collections import deque
+from maze import get_neighbors
 
-# Directions 4-connexes : droite, bas, gauche, haut
-DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+def reconstruct_path(parent, start, goal):
+    if goal not in parent:
+        return None
+    path = []
+    cur = goal
+    while cur is not None:
+        path.append(cur)
+        cur = parent[cur]
+    path.reverse()
+    return path if path and path[0] == start else None
 
-#---------------BFS-------------------------
 def bfs(grid, start, goal):
     """
     BFS : trouve le plus court chemin (en nombre d'étapes) de start à goal.
-    Retourne (path, visited_order) où :
-      - path : liste [(r,c), ...] ou None si pas de chemin
-      - visited_order : liste des cases explorées (dans l'ordre de dépilement)
+    Retourne (path, visited_order).
     """
     if start == goal:
         return [start], [start]
@@ -23,17 +29,15 @@ def bfs(grid, start, goal):
     visited_order = []
 
     while queue:
-        r, c = queue.popleft()
-        visited_order.append((r, c))
-
-        if (r, c) == goal:
+        node = queue.popleft()
+        visited_order.append(node)
+        if node == goal:
             return reconstruct_path(parent, start, goal), visited_order
 
-        for nr, nc in get_neighbors(grid, r, c):
-            if (nr, nc) not in visited:
-                visited.add((nr, nc))
-                parent[(nr, nc)] = (r, c)
-                queue.append((nr, nc))
+        for nb in get_neighbors(grid, *node):
+            if nb not in visited:
+                visited.add(nb)
+                parent[nb] = node
+                queue.append(nb)
 
     return None, visited_order
-
